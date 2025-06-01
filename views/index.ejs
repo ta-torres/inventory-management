@@ -1,0 +1,15 @@
+<h1>Inventory Management</h1>
+
+<div class="section">
+  <h2>Categories</h2>
+  <a href="/categories/new" class="btn">Add New Category</a>
+  <% if (categories.length > 0) { %> <% categories.forEach(category => { %>
+  <div class="card">
+    <h3><%= category.name %></h3>
+    <p><%= category.description || 'No description available' %></p>
+    <a href="/categories/<%= category.id %>" class="btn">View Items</a>
+  </div>
+  <% }) %> <% } else { %>
+  <p>No categories found.</p>
+  <% } %>
+</div>
