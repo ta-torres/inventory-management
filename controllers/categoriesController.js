@@ -1,6 +1,7 @@
 const db = require("../db/queries");
+const { body, validationResult } = require("express-validator");
 
-exports.getAllCategories = async (req, res) => {
+exports.getAllCategories = async (req, res, next) => {
   try {
     const categories = await db.getAllCategories();
     res.render("categories", {
@@ -13,11 +14,48 @@ exports.getAllCategories = async (req, res) => {
 };
 
 exports.getCreateCategoryForm = (req, res) => {
-  res.send("Create category form");
+  res.render("create-category", {
+    title: "Create New Category",
+  });
 };
 
-exports.createCategory = (req, res) => {
-  res.send("Create category");
+exports.validateCreateCategory = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Category name is required")
+    .isLength({ min: 3, max: 100 })
+    .withMessage("Category name must be between 3 and 100 characters"),
+  body("description")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Description cannot exceed 500 characters"),
+];
+
+exports.createCategory = async (req, res, next) => {
+  // check for validation errors first
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // if list is not empty render the form with errors
+      const errorMessage = errors.array()[0].msg;
+
+      return res.render("create-category", {
+        title: "Create New Category",
+        error: errorMessage,
+        name: req.body.name,
+        description: req.body.description,
+      });
+    }
+
+    const { name, description } = req.body;
+    await db.createCategory(name, description || "");
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getCategoryById = (req, res) => {

@@ -9,7 +9,11 @@ router.get("/", categoriesController.getAllCategories);
 router.get("/new", categoriesController.getCreateCategoryForm);
 
 // POST create new category
-router.post("/", categoriesController.createCategory);
+router.post(
+  "/",
+  categoriesController.validateCreateCategory,
+  categoriesController.createCategory
+);
 
 // GET single category by ID
 router.get("/:id", categoriesController.getCategoryById);

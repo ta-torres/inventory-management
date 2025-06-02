@@ -9,7 +9,11 @@ router.get("/", itemsController.getAllItems);
 router.get("/new", itemsController.getCreateItemForm);
 
 // POST create new item
-router.post("/", itemsController.createItem);
+router.post(
+  "/",
+  itemsController.validateCreateItem,
+  itemsController.createItem
+);
 
 // GET single item by ID
 router.get("/:id", itemsController.getItemById);
