@@ -58,8 +58,25 @@ exports.createCategory = async (req, res, next) => {
   }
 };
 
-exports.getCategoryById = (req, res) => {
-  res.send(`Category ${req.params.id}`);
+exports.getCategoryById = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+    const category = await db.getCategoryById(categoryId);
+
+    if (!category) {
+      return res.status(404).send("Category not found");
+    }
+
+    const items = await db.getItemsByCategory(categoryId);
+
+    res.render("category-detail", {
+      title: category.name,
+      category: category,
+      items: items,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getEditCategoryForm = (req, res) => {

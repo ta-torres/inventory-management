@@ -38,6 +38,14 @@ async function getItemById(id) {
   return result.rows[0];
 }
 
+async function getItemsByCategory(categoryId) {
+  const result = await pool.query(
+    "SELECT * FROM items WHERE category_id = $1 ORDER BY name",
+    [categoryId]
+  );
+  return result.rows;
+}
+
 module.exports = {
   getAllCategories,
   getAllItems,
@@ -45,4 +53,5 @@ module.exports = {
   createItem,
   getCategoryById,
   getItemById,
+  getItemsByCategory,
 };

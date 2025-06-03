@@ -1,0 +1,31 @@
+<div class="section">
+  <h2><%= category.name %></h2>
+  <p><%= category.description || 'No description available' %></p>
+
+  <div style="margin: 20px 0">
+    <a href="/categories" class="btn btn-secondary">← Back to Categories</a>
+    <a href="/items/new" class="btn">Add New Item</a>
+  </div>
+
+  <h3>Items in this Category</h3>
+
+  <% if (items.length > 0) { %> <% items.forEach(item => { %>
+  <div class="card">
+    <h4><%= item.name %></h4>
+    <p><%= item.description || 'No description available' %></p>
+    <p><strong>Price:</strong> $<%= item.price || '0.00' %></p>
+    <p><strong>Quantity:</strong> <%= item.quantity || 0 %></p>
+
+    <div style="margin-top: 10px">
+      <a href="/items/<%= item.id %>" class="btn">View Item</a>
+      <a href="/items/<%= item.id %>/edit" class="btn">Edit</a>
+      <a href="/items/<%= item.id %>/delete" class="btn btn-danger">Delete</a>
+    </div>
+  </div>
+  <% }) %> <% } else { %>
+  <div class="card">
+    <p>No items found in this category.</p>
+    <a href="/items/new" class="btn">Add the first item</a>
+  </div>
+  <% } %>
+</div>
