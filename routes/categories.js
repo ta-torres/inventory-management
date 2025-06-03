@@ -22,7 +22,11 @@ router.get("/:id", categoriesController.getCategoryById);
 router.get("/:id/edit", categoriesController.getEditCategoryForm);
 
 // POST update category
-router.post("/:id/edit", categoriesController.updateCategory);
+router.post(
+  "/:id/edit",
+  categoriesController.validateUpdateCategory,
+  categoriesController.updateCategory
+);
 
 // POST delete category
 router.post("/:id/delete", categoriesController.deleteCategory);

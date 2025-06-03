@@ -79,12 +79,62 @@ exports.getCategoryById = async (req, res, next) => {
   }
 };
 
-exports.getEditCategoryForm = (req, res) => {
-  res.send(`Edit category ${req.params.id} form`);
+exports.getEditCategoryForm = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+    const category = await db.getCategoryById(categoryId);
+
+    if (!category) {
+      return res.status(404).send("Category not found");
+    }
+
+    res.render("edit-category", {
+      title: "Edit Category",
+      category: category,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.updateCategory = (req, res) => {
-  res.send(`Update category ${req.params.id}`);
+exports.validateUpdateCategory = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Category name is required")
+    .isLength({ min: 3, max: 100 })
+    .withMessage("Category name must be between 3 and 100 characters"),
+  body("description")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Description cannot exceed 500 characters"),
+];
+
+exports.updateCategory = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const category = await db.getCategoryById(categoryId);
+      const errorMessage = errors.array()[0].msg;
+
+      return res.render("edit-category", {
+        title: "Edit Category",
+        category: category,
+        error: errorMessage,
+        name: req.body.name,
+        description: req.body.description,
+      });
+    }
+
+    const { name, description } = req.body;
+    await db.updateCategory(categoryId, name, description || "");
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.deleteCategory = (req, res) => {
