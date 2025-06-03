@@ -54,6 +54,14 @@ async function updateCategory(id, name, description) {
   return result.rows[0];
 }
 
+async function updateItem(id, name, description, price, quantity, categoryId) {
+  const result = await pool.query(
+    "UPDATE items SET name = $1, description = $2, price = $3, quantity = $4, category_id = $5 WHERE id = $6 RETURNING *",
+    [name, description, price, quantity, categoryId, id]
+  );
+  return result.rows[0];
+}
+
 module.exports = {
   getAllCategories,
   getAllItems,
@@ -63,4 +71,5 @@ module.exports = {
   getItemById,
   getItemsByCategory,
   updateCategory,
+  updateItem,
 };

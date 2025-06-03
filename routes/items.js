@@ -22,7 +22,11 @@ router.get("/:id", itemsController.getItemById);
 router.get("/:id/edit", itemsController.getEditItemForm);
 
 // POST update item
-router.post("/:id/edit", itemsController.updateItem);
+router.post(
+  "/:id/edit",
+  itemsController.validateUpdateItem,
+  itemsController.updateItem
+);
 
 // POST delete item
 router.post("/:id/delete", itemsController.deleteItem);

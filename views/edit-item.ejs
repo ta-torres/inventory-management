@@ -1,0 +1,71 @@
+<div class="section">
+  <h2>Edit Item</h2>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+  <div class="error-message"><%= error %></div>
+  <% } %>
+
+  <form action="/items/<%= item.id %>/edit" method="POST">
+    <div class="form-group">
+      <label for="name">Item Name *</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        value="<%= typeof name !== 'undefined' ? name : item.name %>"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3">
+<%= typeof description !== 'undefined' ? description : (item.description || '') %></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Price ($)</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          step="0.01"
+          min="0"
+          value="<%= typeof price !== 'undefined' ? price : (item.price || '') %>"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input
+          type="number"
+          id="quantity"
+          name="quantity"
+          min="0"
+          value="<%= typeof quantity !== 'undefined' ? quantity : (item.quantity || '') %>"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="category_id">Category *</label>
+      <select id="category_id" name="category_id" required>
+        <option value="" disabled>Select a category</option>
+        <% categories.forEach(category => { %>
+        <option 
+          value="<%= category.id %>" 
+          <%= (typeof category_id !== 'undefined' ? category_id : item.category_id) == category.id ? 'selected' : '' %>
+        >
+          <%= category.name %>
+        </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">Update Item</button>
+      <a href="/items" class="btn btn-secondary" style="margin-left: 10px">Cancel</a>
+    </div>
+  </form>
+</div>
