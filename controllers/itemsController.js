@@ -91,8 +91,22 @@ exports.createItem = async (req, res, next) => {
   }
 };
 
-exports.getItemById = (req, res) => {
-  res.send(`Item ${req.params.id}`);
+exports.getItemById = async (req, res, next) => {
+  try {
+    const itemId = req.params.id;
+    const item = await db.getItemById(itemId);
+
+    if (!item) {
+      return res.status(404).send("Item not found");
+    }
+
+    res.render("item-detail", {
+      title: item.name,
+      item: item,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getEditItemForm = async (req, res, next) => {
