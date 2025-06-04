@@ -62,6 +62,24 @@ async function updateItem(id, name, description, price, quantity, categoryId) {
   return result.rows[0];
 }
 
+async function deleteCategory(id) {
+  // ON DELETE CASCADE on the db schema deletes all rows in a child table when a row in the parent table is deleted
+  // items table: category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE
+  const result = await pool.query(
+    "DELETE FROM categories WHERE id = $1 RETURNING *",
+    [id]
+  );
+  return result.rows[0];
+}
+
+async function deleteItem(id) {
+  const result = await pool.query(
+    "DELETE FROM items WHERE id = $1 RETURNING *",
+    [id]
+  );
+  return result.rows[0];
+}
+
 module.exports = {
   getAllCategories,
   getAllItems,
@@ -72,4 +90,6 @@ module.exports = {
   getItemsByCategory,
   updateCategory,
   updateItem,
+  deleteCategory,
+  deleteItem,
 };

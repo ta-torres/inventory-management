@@ -11,7 +11,14 @@
     <a href="/categories/<%= item.category_id %>" class="btn">View Category</a>
     <a href="/items/<%= item.id %>" class="btn">View Item</a>
     <a href="/items/<%= item.id %>/edit" class="btn">Edit Item</a>
-    <a href="/items/<%= item.id %>/delete" class="btn">Delete Item</a>
+    <form
+      action="/items/<%= item.id %>/delete"
+      method="POST"
+      style="display: inline"
+      onsubmit="return confirm('Are you sure you want to delete this item? This action cannot be undone.');"
+    >
+      <button type="submit" class="btn btn-danger">Delete Item</button>
+    </form>
   </div>
   <% }) %> <% } else { %>
   <p>No items found.</p>

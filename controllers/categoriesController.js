@@ -137,6 +137,21 @@ exports.updateCategory = async (req, res, next) => {
   }
 };
 
-exports.deleteCategory = (req, res) => {
-  res.send(`Delete category ${req.params.id}`);
+exports.deleteCategory = async (req, res, next) => {
+  // cascade delete all items
+  try {
+    const categoryId = req.params.id;
+    const category = await db.getCategoryById(categoryId);
+
+    if (!category) {
+      return res.status(404).send("Category not found");
+    }
+    const items = await db.getItemsByCategory(categoryId);
+
+    await db.deleteCategory(categoryId);
+
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
 };

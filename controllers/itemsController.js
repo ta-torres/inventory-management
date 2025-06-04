@@ -185,6 +185,19 @@ exports.updateItem = async (req, res, next) => {
   }
 };
 
-exports.deleteItem = (req, res) => {
-  res.send(`Delete item ${req.params.id}`);
+exports.deleteItem = async (req, res, next) => {
+  try {
+    const itemId = req.params.id;
+    const item = await db.getItemById(itemId);
+
+    if (!item) {
+      return res.status(404).send("Item not found");
+    }
+
+    await db.deleteItem(itemId);
+
+    res.redirect("/items");
+  } catch (error) {
+    next(error);
+  }
 };
