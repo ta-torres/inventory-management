@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const itemsController = require("../controllers/itemsController");
+const { requireAdmin } = require("../middleware/adminAuth");
 
 // GET all items
 router.get("/", itemsController.getAllItems);
@@ -19,16 +20,17 @@ router.post(
 router.get("/:id", itemsController.getItemById);
 
 // GET form to edit item
-router.get("/:id/edit", itemsController.getEditItemForm);
+router.get("/:id/edit", requireAdmin, itemsController.getEditItemForm);
 
 // POST update item
 router.post(
   "/:id/edit",
+  requireAdmin,
   itemsController.validateUpdateItem,
   itemsController.updateItem
 );
 
 // POST delete item
-router.post("/:id/delete", itemsController.deleteItem);
+router.post("/:id/delete", requireAdmin, itemsController.deleteItem);
 
 module.exports = router;

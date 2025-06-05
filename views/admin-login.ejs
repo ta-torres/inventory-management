@@ -1,0 +1,26 @@
+<div class="section">
+  <h2>Admin Access Required</h2>
+  <p>Please enter the admin password</p>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+  <div class="error-message"><%= error %></div>
+  <% } %>
+
+  <form action="/admin/login" method="POST">
+    <div class="form-group">
+      <label for="password">Admin Password</label>
+      <input type="password" id="password" name="password" required autofocus />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">Confirm Access</button>
+      <a
+        href="javascript:history.back()"
+        class="btn btn-secondary"
+        style="margin-left: 10px"
+      >
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
